@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title th:text="${recipe.name} + ' - Recipe Details'"></title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <script src="/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+  <div class="container mt-5 text-center">
+    <h1 class="display-4 mb-4" th:text="${recipe.name}">Recipe Name</h1>
+
+    <div class="row justify-content-center mb-4"> <!-- Center the image in the row -->
+      <div class="col-md-10">
+        <img th:src="@{${recipe.image}}" class="img-fluid rounded" alt="Recipe Image">
+        <!-- Smaller image -->
+      </div>
+    </div>
+
+    <h3 class="mt-4">Ingredients:</h3>
+    <ul class="list-group mb-4">
+      <li class="list-group-item" th:each="ingredient : ${recipe.ingredients}"
+        th:text="${ingredient.quantity} + ' of ' + ${ingredient.name}">
+        Ingredient
+      </li>
+    </ul>
+
+    <h3 class="mt-4">Instructions:</h3>
+    <p class="lead" th:text="${recipe.instructions}">Recipe Instructions</p>
+
+    <!-- Button to go back to the recipe list -->
+    <div class="mt-4 mb-4">
+      <a href="/recipes" class="btn btn-secondary btn-lg">Back to Recipes</a>
+    </div>
+  </div>
+</body>
+
+
+
+</html>
