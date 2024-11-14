@@ -53,4 +53,29 @@ public class UserService {
 
     return null;
   }
+
+  public String register(User user) {
+    log.info("REGISTERING: " + user);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<User> entity = new HttpEntity<>(user, headers);
+
+    ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+        backendUrl + "/auth/register",
+        HttpMethod.POST,
+        entity,
+        new ParameterizedTypeReference<Map<String, Object>>() {
+        });
+
+    log.info("RESPONSE: " + response);
+
+    if (response.getStatusCode() == HttpStatus.OK) {
+      Map<String, Object> body = response.getBody();
+      return (String) body.get("token");
+    }
+
+    return null;
+  }
 }

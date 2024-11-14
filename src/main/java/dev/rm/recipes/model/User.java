@@ -8,7 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+
   private String username;
-  private String password; // Consider not exposing this in your API responses
-  private String roles; // e.g., "USER", "ADMIN"
+  private String email;
+  private String password;
+  private String confirmPassword;
+  private String roles;
 }
