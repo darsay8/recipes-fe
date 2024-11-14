@@ -1,0 +1,25 @@
+.card {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border: 0;
+}
+
+.card img {
+  cursor: pointer;
+}
+
+.card img:hover {
+  opacity: 0.8;
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.card-body {
+  background-color: #f8f9fa;
+}
+
+hr {
+  color: lightgrey;
+}

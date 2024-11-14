@@ -1,5 +1,12 @@
 server:
   port: 8081
+  error:
+    whitelabel:
+      enabled: false
 
 backend:
   url: ${BACKEND_URL}
+
+logging:
+  level:
+    root: INFO

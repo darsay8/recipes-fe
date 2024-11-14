@@ -10,7 +10,7 @@
 <body>
   <div class="container d-flex align-items-center justify-content-center vh-100">
     <div class="card p-4" style="width: 400px;">
-      <h2 class="text-center">Login</h2>
+      <h2 class="text-center">Login </h2>
       <form id="loginForm" method="post">
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
@@ -23,7 +23,10 @@
         <button type="submit" class="btn btn-primary w-100">Login</button>
       </form>
       <div class="text-center mt-3">
-        <a th:href="@{/}" class="btn btn-link">Back to Recipes</a>
+        <a th:href="@{/}" class="btn btn-link small text-decoration-none">Back to Recipes</a>
+      </div>
+      <div class="text-center">
+        <a th:href="@{/register}" class="btn btn-link small text-decoration-none">Go to register</a>
       </div>
     </div>
   </div>
