@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Error</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <script src="/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row justify-content-center align-items-center">
+      <div class="text-center mt-5">
+        <h1 th:text="${error}">Error Status Code</h1>
+        <!-- <p class="message">Something went wrong!</p> -->
+        <p class="message" th:text="'Code: ' + ${status}">Error Status</p>
+        <p class="message" th:text="'Message: ' + ${message}">Error details</p>
+        <p class="small" th:text="'Timestamp: ' + ${#dates.format(timestamp, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</p>
+      </div>
+      <a href="/" th:href="@{/}" class="btn btn-link small text-decoration-none p-0">Go Back to Home</a>
+    </div>
+  </div>
+
+</body>
+</body>
+
+</html>
