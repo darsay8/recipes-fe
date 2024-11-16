@@ -2,70 +2,84 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <title th:text="${recipe.name} + ' - Recipe Details'"></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${recipe.name}">Recipe Name</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
   <script src="/js/bootstrap.bundle.min.js"></script>
+
 </head>
 
 <body>
   <div class="container mt-5 text-center">
     <h1 class="display-4 mb-4" th:text="${recipe.name}">Recipe Name</h1>
-
-    <div class="row justify-content-center mb-4"> <!-- Center the image in the row -->
-      <div class="col-md-10">
+    <div class="row mb-4">
+      <div class="col-12 col-lg-6">
         <img th:src="@{${recipe.image}}" class="img-fluid rounded" alt="Recipe Image" width="560">
-        <!-- Smaller image -->
       </div>
-    </div>
 
-    <div>
-      <h2>Watch the Recipe Video</h2>
-      <iframe width="560" height="315" th:src="@{'https://www.youtube.com/embed/' + ${videoId}}" frameborder="0"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-      </iframe>
+      <div class="col-12 col-lg-6">
+
+        <h3 class="mt-4">Ingredients:</h3>
+        <ul class="list-group mb-4">
+          <li class="list-group-item" th:each="ingredient : ${recipe.ingredients}"
+            th:text="${ingredient.quantity} + ' of ' + ${ingredient.name}">
+            Ingredient
+          </li>
+        </ul>
+
+        <h3 class="mt-4 ">Instructions:</h3>
+        <p class="lead" th:text="${recipe.instructions}">Recipe Instructions</p>
+
+
+        <div class="mt-4">
+          <p><strong>Share this recipe:</strong></p>
+          <div class="d-flex justify-content-center">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:8080/recipes/{id}(id=${recipe.id})"
+              target="_blank" class="btn btn-primary btn-sm me-2">
+              <i class="fab fa-facebook-f"></i> Share on Facebook
+            </a>
+            <a href="https://twitter.com/intent/tweet?url=http://localhost:8080/recipes/{id}(id=${recipe.id})&text=Check out this recipe!"
+              target="_blank" class="btn btn-info btn-sm me-2">
+              <i class="fab fa-twitter"></i> Tweet on Twitter
+              <a href="https://wa.me/?text=Check out this recipe: http://localhost:8080/recipes/{id}(id=${recipe.id})"
+                target="_blank" class="btn btn-success btn-sm">
+                <i class="fab fa-whatsapp"></i> Share on WhatsApp
+              </a>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button class="btn btn-outline-danger btn me-3">
+            <i class="fas fa-heart"></i> Like
+          </button>
+          <button class="btn btn-outline-success btn">
+            <i class="fas fa-save"></i> Save Recipe
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="mt-4">
-      <p><strong>Share this recipe:</strong></p>
-      <div class="d-flex justify-content-center">
-        <!-- Facebook -->
-        <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:8080/recipes/{id}(id=${recipe.id})"
-          target="_blank" class="btn btn-primary btn-sm me-2">
-          <i class="fab fa-facebook-f"></i> Share on Facebook
-        </a>
+      <h4>Add a Comment</h4>
+      <form id="commentForm" th:action="@{/recipes/{id}/comments(id=${recipe.id})}" method="post">
+        <textarea name="content" class="form-control" placeholder="Write your comment here..." required></textarea>
+        <button type="submit" class="btn btn-primary my-4">Submit Comment</button>
+      </form>
 
-        <!-- Twitter -->
-        <a href="https://twitter.com/intent/tweet?url=http://localhost:8080/recipes/{id}(id=${recipe.id})&text=Check out this recipe!"
-          target="_blank" class="btn btn-info btn-sm me-2">
-          <i class="fab fa-twitter"></i> Tweet on Twitter
-        </a>
-
-        <!-- WhatsApp -->
-        <a href="https://wa.me/?text=Check out this recipe: http://localhost:8080/recipes/{id}(id=${recipe.id})"
-          target="_blank" class="btn btn-success btn-sm">
-          <i class="fab fa-whatsapp"></i> Share on WhatsApp
-        </a>
+      <div id="commentsSection" class="mt-2">
+        <div th:each="comment : ${comments}">
+          <p><strong th:text="${comment.username}"></strong>: <span th:text="${comment.content}"></span></p>
+        </div>
       </div>
     </div>
 
-    <h3 class="mt-4">Ingredients:</h3>
-    <ul class="list-group mb-4">
-      <li class="list-group-item" th:each="ingredient : ${recipe.ingredients}"
-        th:text="${ingredient.quantity} + ' of ' + ${ingredient.name}">
-        Ingredient
-      </li>
-    </ul>
-
-    <h3 class="mt-4">Instructions:</h3>
-    <p class="lead" th:text="${recipe.instructions}">Recipe Instructions</p>
-
-    <!-- Button to go back to the recipe list -->
-    <div class="mt-4 mb-4">
-      <a href="/recipes" class="btn btn-secondary btn-lg">Back to Recipes</a>
+    <div class="mt-4 mb-5">
+      <a href="/recipes" class="btn btn-secondary">Back to Recipes</a>
     </div>
   </div>
 </body>
-
-
 
 </html>

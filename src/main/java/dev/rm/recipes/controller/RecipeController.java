@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dev.rm.recipes.model.Comment;
 import dev.rm.recipes.model.Difficulty;
 import dev.rm.recipes.model.Ingredient;
 import dev.rm.recipes.model.MealType;
 import dev.rm.recipes.model.Recipe;
+import dev.rm.recipes.service.CommentService;
 import dev.rm.recipes.service.RecipeService;
+import dev.rm.recipes.utils.RecipeUtils;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +30,9 @@ public class RecipeController {
 
   @Autowired
   private RecipeService recipeService;
+
+  @Autowired
+  private CommentService commentService;
 
   @GetMapping("/")
   public String getRecipes(Model model, HttpSession session) {
@@ -54,13 +60,13 @@ public class RecipeController {
       return "error";
     }
 
-    String videoId = extractVideoId(recipe.getVideoUrl());
+    List<Comment> comments = commentService.getCommentsByRecipeId(id, token);
+    String videoId = RecipeUtils.extractVideoId(recipe.getVideoUrl());
 
     model.addAttribute("recipe", recipe);
     model.addAttribute("videoId", videoId);
+    model.addAttribute("comments", comments);
 
-    log.info("Recipe: {}", recipe.getVideoUrl());
-    log.info("Video: {}", videoId);
     return "recipe-detail";
   }
 
@@ -108,7 +114,6 @@ public class RecipeController {
     }
     Recipe recipe = new Recipe();
     model.addAttribute("recipe", recipe);
-    // model.addAttribute("token", token);
     return "create-recipe";
   }
 
@@ -130,7 +135,6 @@ public class RecipeController {
       return "redirect:/login";
     }
 
-    // Prepare ingredients
     List<Ingredient> ingredients = new ArrayList<>();
     for (int i = 0; i < ingredientNames.length; i++) {
       Ingredient ingredient = new Ingredient();
@@ -139,7 +143,6 @@ public class RecipeController {
       ingredients.add(ingredient);
     }
 
-    // Prepare recipe object (without setting the user)
     Recipe recipe = new Recipe();
     recipe.setName(name);
     recipe.setImage(image);
@@ -150,9 +153,6 @@ public class RecipeController {
     recipe.setCountryOfOrigin(countryOfOrigin);
     recipe.setIngredients(ingredients);
 
-    log.info("Creating recipe: {}", recipe);
-
-    // Send the recipe data (without user) and token for authentication
     boolean isCreated = recipeService.createRecipe(recipe, token);
     if (isCreated) {
       return "redirect:/recipes";
@@ -167,17 +167,6 @@ public class RecipeController {
     model.addAttribute("recipes", recipes);
     model.addAttribute("noResults", recipes.isEmpty());
     model.addAttribute("countries", allCountries);
-  }
-
-  private String extractVideoId(String videoUrl) {
-    if (videoUrl == null || !videoUrl.contains("v=")) {
-      return null;
-    }
-    String[] urlParts = videoUrl.split("v=");
-    if (urlParts.length > 1) {
-      return urlParts[1].split("&")[0];
-    }
-    return null;
   }
 
 }

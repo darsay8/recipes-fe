@@ -46,8 +46,6 @@ public class RecipeService {
         entity,
         Recipe[].class);
 
-    // return List.of(response.getBody());
-
     List<Recipe> recipes = List.of(response.getBody());
     Set<String> countries = recipes.stream()
         .map(Recipe::getCountryOfOrigin)
@@ -114,8 +112,6 @@ public class RecipeService {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set("Authorization", "Bearer " + token);
-
-    log.info("Creating recipe Service: {}", recipe);
 
     HttpEntity<Recipe> entity = new HttpEntity<>(recipe, headers);
 
