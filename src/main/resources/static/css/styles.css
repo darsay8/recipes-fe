@@ -5,6 +5,7 @@
 
 .card img {
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .card img:hover {
