@@ -1,6 +1,7 @@
 package dev.rm.recipes.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.HttpMethod;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import dev.rm.recipes.model.Difficulty;
@@ -18,6 +19,7 @@ import dev.rm.recipes.model.Recipe;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -106,6 +108,32 @@ public class RecipeService {
         Recipe[].class);
 
     return List.of(response.getBody());
+  }
+
+  public boolean createRecipe(Recipe recipe, String token) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("Authorization", "Bearer " + token);
+
+    log.info("Creating recipe Service: {}", recipe);
+
+    HttpEntity<Recipe> entity = new HttpEntity<>(recipe, headers);
+
+    ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+        backendUrl + "/recipes",
+        HttpMethod.POST,
+        entity,
+        new ParameterizedTypeReference<Map<String, Object>>() {
+        });
+
+    if (response.getStatusCode() == HttpStatus.CREATED) {
+      Map<String, Object> body = response.getBody();
+      log.info("Recipe created successfully: {}", body);
+      return true;
+    }
+
+    log.error("Failed to create recipe. Status: {}", response.getStatusCode());
+    return false;
   }
 
   public Set<String> getAllCountries(List<Recipe> recipes) {

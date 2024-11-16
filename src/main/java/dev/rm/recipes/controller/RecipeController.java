@@ -4,9 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import dev.rm.recipes.model.Difficulty;
+import dev.rm.recipes.model.Ingredient;
 import dev.rm.recipes.model.MealType;
 import dev.rm.recipes.model.Recipe;
 import dev.rm.recipes.service.RecipeService;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +54,13 @@ public class RecipeController {
       return "error";
     }
 
+    String videoId = extractVideoId(recipe.getVideoUrl());
+
     model.addAttribute("recipe", recipe);
+    model.addAttribute("videoId", videoId);
+
+    log.info("Recipe: {}", recipe.getVideoUrl());
+    log.info("Video: {}", videoId);
     return "recipe-detail";
   }
 
@@ -91,11 +100,84 @@ public class RecipeController {
     return "recipes";
   }
 
+  @GetMapping("/recipes/create")
+  public String showCreateRecipeForm(Model model, HttpSession session) {
+    String token = (String) session.getAttribute("token");
+    if (token == null) {
+      return "redirect:/login";
+    }
+    Recipe recipe = new Recipe();
+    model.addAttribute("recipe", recipe);
+    // model.addAttribute("token", token);
+    return "create-recipe";
+  }
+
+  @PostMapping("/recipes/create")
+  public String createRecipe(
+      @RequestParam("name") String name,
+      @RequestParam("image") String image,
+      @RequestParam("videoUrl") String videoUrl,
+      @RequestParam("mealType") MealType mealType,
+      @RequestParam("difficulty") Difficulty difficulty,
+      @RequestParam("instructions") String instructions,
+      @RequestParam("countryOfOrigin") String countryOfOrigin,
+      @RequestParam("ingredients[]") String[] ingredientNames,
+      @RequestParam("quantities[]") String[] ingredientQuantities,
+      HttpSession session, Model model) {
+
+    String token = (String) session.getAttribute("token");
+    if (token == null || token.isEmpty()) {
+      return "redirect:/login";
+    }
+
+    // Prepare ingredients
+    List<Ingredient> ingredients = new ArrayList<>();
+    for (int i = 0; i < ingredientNames.length; i++) {
+      Ingredient ingredient = new Ingredient();
+      ingredient.setName(ingredientNames[i]);
+      ingredient.setQuantity(ingredientQuantities[i]);
+      ingredients.add(ingredient);
+    }
+
+    // Prepare recipe object (without setting the user)
+    Recipe recipe = new Recipe();
+    recipe.setName(name);
+    recipe.setImage(image);
+    recipe.setVideoUrl(videoUrl);
+    recipe.setMealType(mealType);
+    recipe.setDifficulty(difficulty);
+    recipe.setInstructions(instructions);
+    recipe.setCountryOfOrigin(countryOfOrigin);
+    recipe.setIngredients(ingredients);
+
+    log.info("Creating recipe: {}", recipe);
+
+    // Send the recipe data (without user) and token for authentication
+    boolean isCreated = recipeService.createRecipe(recipe, token);
+    if (isCreated) {
+      return "redirect:/recipes";
+    } else {
+      model.addAttribute("error", "Failed to create recipe.");
+      return "create-recipe";
+    }
+  }
+
   private void populateModelWithRecipesAndCountries(Model model, List<Recipe> recipes) {
     Set<String> allCountries = recipeService.getAllCountries(recipes);
     model.addAttribute("recipes", recipes);
     model.addAttribute("noResults", recipes.isEmpty());
     model.addAttribute("countries", allCountries);
+  }
+
+  private String extractVideoId(String videoUrl) {
+    if (videoUrl == null || !videoUrl.contains("v=")) {
+      return null;
+    }
+    String[] urlParts = videoUrl.split("v=");
+    if (urlParts.length > 1) {
+      return urlParts[1].split("&")[0];
+    }
+    return null;
   }
 
 }

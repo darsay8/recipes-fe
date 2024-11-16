@@ -24,7 +24,7 @@
           </div>
 
           <div th:if="${session.token != null}" class="me-2">
-            <a href="/create-recipe" class="btn btn-secondary">+ Add Recipe</a>
+            <a href="/recipes/create" class="btn btn-secondary">+ Add Recipe</a>
           </div>
 
           <div th:if="${session.token != null}">
@@ -114,8 +114,8 @@
                     th:text="${recipe.countryOfOrigin}"></span>
                 </p>
                 <hr class="my-2">
-                <p class="card-text mb-0"><strong>Difficulty:</strong> <span th:text="${recipe.difficulty}"></span></p>
-                <hr class="my-2">
+                <p class="card-text mb-2"><strong>Difficulty:</strong> <span th:text="${recipe.difficulty}"></span></p>
+
                 <!-- <p th:text="${recipe.preparationTime}"></p> -->
                 <div th:if="${session.token != null}" class="mt-4 text-end w-100">
                   <a th:href="@{/recipes/{id}(id=${recipe.id})}" class="btn btn-outline-primary w-100">View Recipe</a>
