@@ -13,6 +13,7 @@ public class Recipe {
   private Long id;
   private String name;
   private String image;
+  private String videoUrl;
   private MealType mealType;
   private List<Ingredient> ingredients;
   private String countryOfOrigin;

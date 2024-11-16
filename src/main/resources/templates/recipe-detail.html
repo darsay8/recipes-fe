@@ -13,8 +13,38 @@
 
     <div class="row justify-content-center mb-4"> <!-- Center the image in the row -->
       <div class="col-md-10">
-        <img th:src="@{${recipe.image}}" class="img-fluid rounded" alt="Recipe Image">
+        <img th:src="@{${recipe.image}}" class="img-fluid rounded" alt="Recipe Image" width="560">
         <!-- Smaller image -->
+      </div>
+    </div>
+
+    <div>
+      <h2>Watch the Recipe Video</h2>
+      <iframe width="560" height="315" th:src="@{'https://www.youtube.com/embed/' + ${videoId}}" frameborder="0"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+      </iframe>
+    </div>
+
+    <div class="mt-4">
+      <p><strong>Share this recipe:</strong></p>
+      <div class="d-flex justify-content-center">
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:8080/recipes/{id}(id=${recipe.id})"
+          target="_blank" class="btn btn-primary btn-sm me-2">
+          <i class="fab fa-facebook-f"></i> Share on Facebook
+        </a>
+
+        <!-- Twitter -->
+        <a href="https://twitter.com/intent/tweet?url=http://localhost:8080/recipes/{id}(id=${recipe.id})&text=Check out this recipe!"
+          target="_blank" class="btn btn-info btn-sm me-2">
+          <i class="fab fa-twitter"></i> Tweet on Twitter
+        </a>
+
+        <!-- WhatsApp -->
+        <a href="https://wa.me/?text=Check out this recipe: http://localhost:8080/recipes/{id}(id=${recipe.id})"
+          target="_blank" class="btn btn-success btn-sm">
+          <i class="fab fa-whatsapp"></i> Share on WhatsApp
+        </a>
       </div>
     </div>
 
