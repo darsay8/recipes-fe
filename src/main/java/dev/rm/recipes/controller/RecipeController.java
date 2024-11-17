@@ -18,8 +18,6 @@ import dev.rm.recipes.utils.RecipeUtils;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +26,14 @@ import java.util.Set;
 @Controller
 public class RecipeController {
 
-  @Autowired
   private RecipeService recipeService;
 
-  @Autowired
   private CommentService commentService;
+
+  public RecipeController(RecipeService recipeService, CommentService commentService) {
+    this.recipeService = recipeService;
+    this.commentService = commentService;
+  }
 
   @GetMapping("/")
   public String getRecipes(Model model, HttpSession session) {

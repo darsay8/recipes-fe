@@ -46,13 +46,7 @@ public class RecipeService {
         entity,
         Recipe[].class);
 
-    List<Recipe> recipes = List.of(response.getBody());
-    Set<String> countries = recipes.stream()
-        .map(Recipe::getCountryOfOrigin)
-        .filter(country -> country != null && !country.isEmpty())
-        .collect(Collectors.toSet());
-
-    return recipes;
+    return List.of(response.getBody());
 
   }
 
@@ -77,12 +71,6 @@ public class RecipeService {
   }
 
   public List<Recipe> searchRecipes(String name, MealType mealType, String countryOfOrigin, Difficulty difficulty) {
-    // UriComponentsBuilder uriBuilder =
-    // UriComponentsBuilder.fromHttpUrl(backendUrl+ "/recipes/search")
-    // .queryParam("name", name)
-    // .queryParam("mealType", mealType)
-    // .queryParam("countryOfOrigin", countryOfOrigin)
-    // .queryParam("difficulty", difficulty);
 
     UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(backendUrl + "/recipes/search");
 

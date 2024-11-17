@@ -2,6 +2,9 @@ package dev.rm.recipes.utils;
 
 public class RecipeUtils {
 
+  private RecipeUtils() {
+  }
+
   public static String extractVideoId(String videoUrl) {
     if (videoUrl == null || !videoUrl.contains("v=")) {
       return null;

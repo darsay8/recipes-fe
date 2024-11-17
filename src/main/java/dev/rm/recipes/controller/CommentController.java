@@ -51,8 +51,6 @@ public class CommentController {
       return "redirect:/login";
     }
 
-    Comment comment = commentService.createComment(recipeId, content, token);
-
     Recipe recipe = recipeService.getRecipeById(recipeId, token);
     String videoId = RecipeUtils.extractVideoId(recipe.getVideoUrl());
 
