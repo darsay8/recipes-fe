@@ -53,12 +53,14 @@ public class CommentController {
 
     Recipe recipe = recipeService.getRecipeById(recipeId, token);
     String videoId = RecipeUtils.extractVideoId(recipe.getVideoUrl());
+    Comment comment = commentService.createComment(recipeId, content, token);
 
     List<Comment> comments = commentService.getCommentsByRecipeId(recipeId, token);
 
     model.addAttribute("recipe", recipe);
     model.addAttribute("videoId", videoId);
     model.addAttribute("comments", comments);
+    model.addAttribute("comment", comment);
 
     return "recipe-detail";
 
