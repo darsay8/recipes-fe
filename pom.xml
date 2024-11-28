@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dev.rm</groupId>
-	<artifactId>recipes</artifactId>
+	<artifactId>recipes-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>recipes</name>
-	<description>Demo project for Spring Boot</description>
+	<name>recipes-client</name>
+	<description>Recipes Client</description>
 	<url/>
 	<licenses>
 		<license/>
