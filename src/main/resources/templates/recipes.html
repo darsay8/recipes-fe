@@ -27,6 +27,10 @@
             <a href="/recipes/create" class="btn btn-secondary">+ Add Recipe</a>
           </div>
 
+          <div th:if="${session.token != null}" class="me-2">
+            <a href="/admin/users" class="btn btn-secondary">Admin Users</a>
+          </div>
+
           <div th:if="${session.token != null}">
             <a href="/logout" class="btn btn-danger">Logout</a>
           </div>
