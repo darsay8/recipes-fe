@@ -33,7 +33,7 @@ public class UserService {
     this.restTemplate = restTemplate;
   }
 
-  public String authenticate(User user) {
+  public Map<String, Object> authenticate(User user) {
     log.info("AUTHENTICATING: " + user);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -46,17 +46,14 @@ public class UserService {
         new ParameterizedTypeReference<Map<String, Object>>() {
         });
 
-    log.info("RESPONSE: " + response);
-
     if (response.getStatusCode() == HttpStatus.OK) {
-      Map<String, Object> body = response.getBody();
-      return (String) body.get("token");
+      return response.getBody();
     }
 
     return null;
   }
 
-  public String register(User user) {
+  public Map<String, Object> register(User user) {
     log.info("REGISTERING: " + user);
 
     HttpHeaders headers = new HttpHeaders();
@@ -74,8 +71,7 @@ public class UserService {
     log.info("RESPONSE: " + response);
 
     if (response.getStatusCode() == HttpStatus.OK) {
-      Map<String, Object> body = response.getBody();
-      return (String) body.get("token");
+      return response.getBody();
     }
 
     return null;
@@ -119,8 +115,6 @@ public class UserService {
         HttpMethod.GET,
         entity,
         User.class);
-
-    log.info("======================== GET USER BY ID: " + response);
 
     if (response.getStatusCode() == HttpStatus.OK) {
       return response.getBody();

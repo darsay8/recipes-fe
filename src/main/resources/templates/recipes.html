@@ -12,9 +12,8 @@
 <body>
   <div class="container mt-5">
     <div class="row">
-
       <div class="col-12">
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end mb-4">
           <div th:if="${session.token == null}" class="me-2">
             <a href="/register" class="btn btn-secondary">Register</a>
           </div>
@@ -27,7 +26,7 @@
             <a href="/recipes/create" class="btn btn-secondary">+ Add Recipe</a>
           </div>
 
-          <div th:if="${session.token != null}" class="me-2">
+          <div th:if="${session.role != null and session.role == 'ADMIN'}" class="me-2">
             <a href="/admin/users" class="btn btn-secondary">Admin Users</a>
           </div>
 
