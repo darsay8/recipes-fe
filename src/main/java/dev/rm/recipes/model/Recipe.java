@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Recipe {
-  private Long id;
+  private Long recipeId;
   private String name;
   private String image;
   private String videoUrl;
@@ -19,4 +19,5 @@ public class Recipe {
   private String countryOfOrigin;
   private Difficulty difficulty;
   private String instructions;
+  private List<Like> likes;
 }

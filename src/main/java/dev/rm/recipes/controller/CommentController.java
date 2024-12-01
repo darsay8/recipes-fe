@@ -51,18 +51,27 @@ public class CommentController {
       return "redirect:/login";
     }
 
+    try {
+      Comment comment = commentService.createComment(recipeId, content, token);
+      prepareModelForComment(recipeId, token, model);
+      model.addAttribute("comment", comment);
+
+      return "recipe-detail";
+    } catch (Exception e) {
+      prepareModelForComment(recipeId, token, model);
+      model.addAttribute("errorMessage", "Comment contains inappropriate language.");
+      return "recipe-detail";
+    }
+
+  }
+
+  private void prepareModelForComment(Long recipeId, String token, Model model) {
     Recipe recipe = recipeService.getRecipeById(recipeId, token);
     String videoId = RecipeUtils.extractVideoId(recipe.getVideoUrl());
-    Comment comment = commentService.createComment(recipeId, content, token);
-
     List<Comment> comments = commentService.getCommentsByRecipeId(recipeId, token);
 
     model.addAttribute("recipe", recipe);
     model.addAttribute("videoId", videoId);
     model.addAttribute("comments", comments);
-    model.addAttribute("comment", comment);
-
-    return "recipe-detail";
-
   }
 }

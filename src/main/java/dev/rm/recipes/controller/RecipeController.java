@@ -13,6 +13,7 @@ import dev.rm.recipes.model.Ingredient;
 import dev.rm.recipes.model.MealType;
 import dev.rm.recipes.model.Recipe;
 import dev.rm.recipes.service.CommentService;
+import dev.rm.recipes.service.LikeService;
 import dev.rm.recipes.service.RecipeService;
 import dev.rm.recipes.utils.RecipeUtils;
 import jakarta.servlet.http.HttpSession;
@@ -27,12 +28,13 @@ import java.util.Set;
 public class RecipeController {
 
   private RecipeService recipeService;
-
   private CommentService commentService;
+  private LikeService likeService;
 
-  public RecipeController(RecipeService recipeService, CommentService commentService) {
+  public RecipeController(RecipeService recipeService, CommentService commentService, LikeService likeService) {
     this.recipeService = recipeService;
     this.commentService = commentService;
+    this.likeService = likeService;
   }
 
   @GetMapping("/")
@@ -64,9 +66,12 @@ public class RecipeController {
     List<Comment> comments = commentService.getCommentsByRecipeId(id, token);
     String videoId = RecipeUtils.extractVideoId(recipe.getVideoUrl());
 
+    long likes = likeService.getLikesCountByRecipeId(id, token);
+
     model.addAttribute("recipe", recipe);
     model.addAttribute("videoId", videoId);
     model.addAttribute("comments", comments);
+    model.addAttribute("likes", likes);
 
     return "recipe-detail";
   }

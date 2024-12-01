@@ -106,7 +106,7 @@
         <div class="row">
           <div class="col-md-4 mb-4" th:each="recipe : ${recipes}">
             <div class="card">
-              <a th:href="@{/recipes/{id}(id=${recipe.id})}">
+              <a th:href="@{/recipes/{id}(id=${recipe.recipeId})}">
                 <img th:src="@{${recipe.image}}" class="card-img-top" alt="Recipe Image">
               </a>
               <div class="card-body">
@@ -121,7 +121,8 @@
 
                 <!-- <p th:text="${recipe.preparationTime}"></p> -->
                 <div th:if="${session.token != null}" class="mt-4 text-end w-100">
-                  <a th:href="@{/recipes/{id}(id=${recipe.id})}" class="btn btn-outline-primary w-100">View Recipe</a>
+                  <a th:href="@{/recipes/{id}(id=${recipe.recipeId})}" class="btn btn-outline-primary w-100">View
+                    Recipe</a>
                 </div>
               </div>
             </div>

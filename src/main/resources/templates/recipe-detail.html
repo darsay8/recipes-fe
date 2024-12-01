@@ -37,27 +37,33 @@
         <div class="mt-4">
           <p><strong>Share this recipe:</strong></p>
           <div class="d-flex justify-content-center">
-            <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:8080/recipes/{id}(id=${recipe.id})"
+            <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:8080/recipes/{id}(id=${recipe.recipeId})"
               target="_blank" class="btn btn-primary btn-sm me-2">
               <i class="fab fa-facebook-f"></i> Share on Facebook
             </a>
-            <a href="https://twitter.com/intent/tweet?url=http://localhost:8080/recipes/{id}(id=${recipe.id})&text=Check out this recipe!"
+            <a href="https://twitter.com/intent/tweet?url=http://localhost:8080/recipes/{id}(id=${recipe.recipeId})&text=Check out this recipe!"
               target="_blank" class="btn btn-info btn-sm me-2">
               <i class="fab fa-twitter"></i> Tweet on Twitter
-              <a href="https://wa.me/?text=Check out this recipe: http://localhost:8080/recipes/{id}(id=${recipe.id})"
+              <a href="https://wa.me/?text=Check out this recipe: http://localhost:8080/recipes/{id}(id=${recipe.recipeId})"
                 target="_blank" class="btn btn-success btn-sm">
                 <i class="fab fa-whatsapp"></i> Share on WhatsApp
               </a>
           </div>
         </div>
 
-        <div class="mt-4">
-          <button class="btn btn-outline-danger btn me-3">
-            <i class="fas fa-heart"></i> Like
-          </button>
-          <button class="btn btn-outline-success btn">
-            <i class="fas fa-save"></i> Save Recipe
-          </button>
+        <div class="mt-4 d-flex align-items-center justify-content-center">
+          <div class="">
+            <form th:action="@{/recipes/{id}/likes(id=${recipe.recipeId})}" method="post">
+              <button type="submit" class="btn btn-outline-danger btn me-3">
+                <i class="fas fa-heart"></i> Likes <span th:text="${likes}"></span>
+              </button>
+            </form>
+          </div>
+          <div class="">
+            <button class="btn btn-outline-success btn">
+              <i class="fas fa-save"></i> Save Recipe
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -71,10 +77,14 @@
 
     <div class="mt-4">
       <h4>Add a Comment</h4>
-      <form id="commentForm" th:action="@{/recipes/{id}/comments(id=${recipe.id})}" method="post">
+      <form id="commentForm" th:action="@{/recipes/{id}/comments(id=${recipe.recipeId})}" method="post">
         <textarea name="content" class="form-control" placeholder="Write your comment here..." required></textarea>
         <button type="submit" class="btn btn-primary my-4">Submit Comment</button>
       </form>
+
+      <div th:if="${errorMessage}" style="color: red;">
+        <p th:text="${errorMessage}"></p>
+      </div>
 
       <div id="commentsSection" class="mt-2">
         <div th:each="comment : ${comments}">
