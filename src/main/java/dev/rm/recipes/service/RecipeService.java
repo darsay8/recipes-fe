@@ -37,31 +37,24 @@ public class RecipeService {
   }
 
   public List<Recipe> fetchAllRecipes() {
-    HttpHeaders headers = new HttpHeaders();
-    HttpEntity<String> entity = new HttpEntity<>(headers);
 
     ResponseEntity<Recipe[]> response = restTemplate.exchange(
         backendUrl + "/recipes",
         HttpMethod.GET,
-        entity,
+        null,
         Recipe[].class);
 
     return List.of(response.getBody());
 
   }
 
-  public Recipe getRecipeById(Long id, String token) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", "Bearer " + token);
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
-    HttpEntity<Void> entity = new HttpEntity<>(headers);
+  public Recipe getRecipeById(Long id) {
 
     try {
       ResponseEntity<Recipe> response = restTemplate.exchange(
           backendUrl + "/recipes/" + id,
           HttpMethod.GET,
-          entity,
+          null,
           Recipe.class);
       return response.getBody();
     } catch (HttpClientErrorException e) {
@@ -96,12 +89,9 @@ public class RecipeService {
     return List.of(response.getBody());
   }
 
-  public boolean createRecipe(Recipe recipe, String token) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("Authorization", "Bearer " + token);
+  public boolean createRecipe(Recipe recipe) {
 
-    HttpEntity<Recipe> entity = new HttpEntity<>(recipe, headers);
+    HttpEntity<Recipe> entity = new HttpEntity<>(recipe);
 
     ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
         backendUrl + "/recipes",

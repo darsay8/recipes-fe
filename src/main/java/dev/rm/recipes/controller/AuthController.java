@@ -1,7 +1,5 @@
 package dev.rm.recipes.controller;
 
-import java.util.Map;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,16 +7,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import dev.rm.recipes.model.User;
-import dev.rm.recipes.service.UserService;
+import dev.rm.recipes.service.AuthService;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
+
+@Slf4j
 @Controller
 public class AuthController {
 
-  private UserService userService;
+  private final AuthService authService;
 
-  public AuthController(UserService userService) {
-    this.userService = userService;
+  public AuthController(AuthService authService) {
+    this.authService = authService;
   }
 
   @GetMapping("/login")
@@ -28,7 +30,8 @@ public class AuthController {
 
   @PostMapping("/login")
   public String login(@ModelAttribute User user, HttpSession session, Model model) {
-    Map<String, Object> authData = userService.authenticate(user);
+
+    Map<String, Object> authData = authService.authenticate(user);
 
     if (authData != null && authData.containsKey("token")) {
       String token = (String) authData.get("token");
@@ -66,7 +69,7 @@ public class AuthController {
       return "register";
     }
 
-    Map<String, Object> authData = userService.register(user);
+    Map<String, Object> authData = authService.register(user);
 
     if (authData != null && authData.containsKey("token")) {
 

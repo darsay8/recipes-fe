@@ -10,14 +10,24 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 
+import dev.rm.recipes.security.JwtRequestInterceptor;
+import jakarta.servlet.http.HttpSession;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+  private final HttpSession httpSession;
+
+  public SecurityConfig(HttpSession httpSession) {
+    this.httpSession = httpSession;
+  }
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf.disable())
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
 
     return http.build();
@@ -33,6 +43,10 @@ public class SecurityConfig {
 
   @Bean
   public RestTemplate restTemplate() {
-    return new RestTemplate();
+    JwtRequestInterceptor jwtRequestInterceptor = new JwtRequestInterceptor(httpSession);
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getInterceptors().add(jwtRequestInterceptor);
+    return restTemplate;
   }
+
 }

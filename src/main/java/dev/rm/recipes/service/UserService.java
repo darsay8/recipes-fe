@@ -15,10 +15,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 @Slf4j
 @Service
@@ -33,87 +31,28 @@ public class UserService {
     this.restTemplate = restTemplate;
   }
 
-  public Map<String, Object> authenticate(User user) {
-    log.info("AUTHENTICATING: " + user);
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    HttpEntity<User> entity = new HttpEntity<>(user, headers);
+  public List<User> getUsers() {
 
-    ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-        backendUrl + "/auth/login",
-        HttpMethod.POST,
-        entity,
-        new ParameterizedTypeReference<Map<String, Object>>() {
-        });
-
-    if (response.getStatusCode() == HttpStatus.OK) {
-      return response.getBody();
-    }
-
-    return null;
-  }
-
-  public Map<String, Object> register(User user) {
-    log.info("REGISTERING: " + user);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
-    HttpEntity<User> entity = new HttpEntity<>(user, headers);
-
-    ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-        backendUrl + "/auth/register",
-        HttpMethod.POST,
-        entity,
-        new ParameterizedTypeReference<Map<String, Object>>() {
-        });
-
-    log.info("RESPONSE: " + response);
-
-    if (response.getStatusCode() == HttpStatus.OK) {
-      return response.getBody();
-    }
-
-    return null;
-  }
-
-  public List<User> getUsers(String token) {
-    log.info("GETTING USERS: " + token);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("Authorization", "Bearer " + token);
-
-    HttpEntity<String> entity = new HttpEntity<>(headers);
-
-    ResponseEntity<User[]> response = restTemplate.exchange(
+    ResponseEntity<List<User>> response = restTemplate.exchange(
         backendUrl + "/users",
         HttpMethod.GET,
-        entity,
-        User[].class);
-
-    log.info("RESPONSE: " + response);
+        null,
+        new ParameterizedTypeReference<List<User>>() {
+        });
 
     if (response.getStatusCode() == HttpStatus.OK) {
-      return List.of(response.getBody());
+      return response.getBody();
     }
 
     return null;
   }
 
-  public User getUserById(String token, Long userId) {
-    log.info("GETTING USER BY ID: " + userId);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("Authorization", "Bearer " + token);
-
-    HttpEntity<String> entity = new HttpEntity<>(headers);
+  public User getUserById(Long userId) {
 
     ResponseEntity<User> response = restTemplate.exchange(
         backendUrl + "/users/" + userId,
         HttpMethod.GET,
-        entity,
+        null,
         User.class);
 
     if (response.getStatusCode() == HttpStatus.OK) {
@@ -123,24 +62,15 @@ public class UserService {
     return null;
   }
 
-  public boolean createUser(String token, User user) {
-    log.info("CREATING USER: " + user);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("Authorization", "Bearer " + token);
-
-    HttpEntity<User> entity = new HttpEntity<>(user, headers);
+  public boolean createUser(User user) {
 
     try {
       ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
           backendUrl + "/users",
           HttpMethod.POST,
-          entity,
+          new HttpEntity<>(user),
           new ParameterizedTypeReference<Map<String, Object>>() {
           });
-
-      log.info("RESPONSE: " + response);
 
       if (response.getStatusCode() == HttpStatus.CREATED) {
         return true;
@@ -154,24 +84,15 @@ public class UserService {
     }
   }
 
-  public boolean updateUser(String token, User user) {
-    log.info("UPDATING USER: " + user);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("Authorization", "Bearer " + token);
-
-    HttpEntity<User> entity = new HttpEntity<>(user, headers);
+  public boolean updateUser(User user) {
 
     try {
       ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
           backendUrl + "/users/" + user.getUserId(),
           HttpMethod.PUT,
-          entity,
+          new HttpEntity<>(user),
           new ParameterizedTypeReference<Map<String, Object>>() {
           });
-
-      log.info("RESPONSE: " + response);
 
       if (response.getStatusCode() == HttpStatus.OK) {
         return true;
@@ -188,23 +109,13 @@ public class UserService {
     }
   }
 
-  public boolean deleteUser(String token, Long userId) {
-    log.info("DELETING USER: " + userId);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("Authorization", "Bearer " + token);
-
-    HttpEntity<String> entity = new HttpEntity<>(headers);
-
+  public boolean deleteUser(Long userId) {
     try {
       ResponseEntity<Void> response = restTemplate.exchange(
           backendUrl + "/users/" + userId,
           HttpMethod.DELETE,
-          entity,
+          null,
           Void.class);
-
-      log.info("RESPONSE: " + response);
 
       if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
         return true;

@@ -35,7 +35,7 @@ public class LikeController {
       return "redirect:/login";
     }
 
-    long likes = likeService.getLikesCountByRecipeId(id, token);
+    long likes = likeService.getLikesCountByRecipeId(id);
 
     model.addAttribute("likes", likes);
 
@@ -51,18 +51,18 @@ public class LikeController {
     }
 
     try {
-      likeService.createLike(recipeId, token);
-      prepareModelForLike(recipeId, token, model);
+      likeService.createLike(recipeId);
+      prepareModelForLike(recipeId, model);
       return "recipe-detail";
     } catch (Exception e) {
-      prepareModelForLike(recipeId, token, model);
+      prepareModelForLike(recipeId, model);
       return "recipe-detail";
     }
   }
 
-  private void prepareModelForLike(Long recipeId, String token, Model model) {
-    Recipe recipe = recipeService.getRecipeById(recipeId, token);
-    long likes = likeService.getLikesCountByRecipeId(recipeId, token);
+  private void prepareModelForLike(Long recipeId, Model model) {
+    Recipe recipe = recipeService.getRecipeById(recipeId);
+    long likes = likeService.getLikesCountByRecipeId(recipeId);
 
     model.addAttribute("recipe", recipe);
     model.addAttribute("likes", likes);

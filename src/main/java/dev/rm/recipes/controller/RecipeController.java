@@ -58,15 +58,15 @@ public class RecipeController {
       return "redirect:/login";
     }
 
-    Recipe recipe = recipeService.getRecipeById(id, token);
+    Recipe recipe = recipeService.getRecipeById(id);
     if (recipe == null) {
       return "error";
     }
 
-    List<Comment> comments = commentService.getCommentsByRecipeId(id, token);
+    List<Comment> comments = commentService.getCommentsByRecipeId(id);
     String videoId = RecipeUtils.extractVideoId(recipe.getVideoUrl());
 
-    long likes = likeService.getLikesCountByRecipeId(id, token);
+    long likes = likeService.getLikesCountByRecipeId(id);
 
     model.addAttribute("recipe", recipe);
     model.addAttribute("videoId", videoId);
@@ -159,7 +159,7 @@ public class RecipeController {
     recipe.setCountryOfOrigin(countryOfOrigin);
     recipe.setIngredients(ingredients);
 
-    boolean isCreated = recipeService.createRecipe(recipe, token);
+    boolean isCreated = recipeService.createRecipe(recipe);
     if (isCreated) {
       return "redirect:/recipes";
     } else {

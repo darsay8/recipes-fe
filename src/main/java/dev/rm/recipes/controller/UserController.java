@@ -36,7 +36,7 @@ public class UserController {
       return "redirect:/login";
     }
 
-    List<User> users = userService.getUsers(token);
+    List<User> users = userService.getUsers();
 
     model.addAttribute("users", users);
 
@@ -51,81 +51,10 @@ public class UserController {
       return "redirect:/login";
     }
 
-    User user = userService.getUserById(token, id);
+    User user = userService.getUserById(id);
     model.addAttribute("user", user);
     return "admin-users";
   }
-
-  // @PostMapping("/admin/users")
-  // public String createUser(@RequestParam String username,
-  // @RequestParam String email,
-  // @RequestParam String password,
-  // @RequestParam String role,
-  // RedirectAttributes redirectAttributes, HttpSession session) {
-
-  // String token = (String) session.getAttribute("token");
-  // if (token == null) {
-  // return "redirect:/login";
-  // }
-
-  // User newUser = new User();
-  // newUser.setUsername(username);
-  // newUser.setEmail(email);
-  // newUser.setPassword(password);
-  // newUser.setRole(role);
-
-  // boolean isCreated = userService.createUser(token, newUser);
-
-  // if (isCreated) {
-  // redirectAttributes.addFlashAttribute("message", "User successfully
-  // created.");
-  // } else {
-  // redirectAttributes.addFlashAttribute("message", "Failed to create user.
-  // Please try again.");
-  // }
-
-  // return "redirect:/admin/users";
-  // }
-
-  // @PutMapping("admin/users/{id}")
-  // public String updateUser(
-  // @PathVariable Long id,
-  // @RequestParam String username,
-  // @RequestParam String email,
-  // @RequestParam String password,
-  // @RequestParam String role,
-  // RedirectAttributes redirectAttributes,
-  // HttpSession session) {
-
-  // String token = (String) session.getAttribute("token");
-  // if (token == null) {
-  // return "redirect:/login";
-  // }
-
-  // User updatedUser = new User();
-  // updatedUser.setUsername(username);
-  // updatedUser.setEmail(email);
-
-  // if (password == null || password.isEmpty()) {
-  // User user = userService.getUserById(token, id);
-  // updatedUser.setPassword(user.getPassword());
-  // } else {
-  // updatedUser.setPassword(password);
-  // }
-  // updatedUser.setRole(role);
-
-  // boolean isUpdated = userService.updateUser(token, updatedUser);
-
-  // if (isUpdated) {
-  // redirectAttributes.addFlashAttribute("message", "User successfully
-  // updated.");
-  // } else {
-  // redirectAttributes.addFlashAttribute("message", "Failed to update user.
-  // Please try again.");
-  // }
-
-  // return "redirect:/admin/users";
-  // }
 
   @PostMapping("/admin/users")
   public String createOrUpdateUser(
@@ -143,7 +72,7 @@ public class UserController {
     }
 
     boolean isNewUser = (userId == null);
-    User user = isNewUser ? new User() : userService.getUserById(token, userId);
+    User user = isNewUser ? new User() : userService.getUserById(userId);
 
     user.setUsername(username);
     user.setEmail(email);
@@ -151,7 +80,7 @@ public class UserController {
     if (password != null && !password.isEmpty()) {
       user.setPassword(password);
     } else if (!isNewUser) {
-      User existingUser = userService.getUserById(token, userId);
+      User existingUser = userService.getUserById(userId);
       user.setPassword(existingUser.getPassword());
     }
 
@@ -159,10 +88,9 @@ public class UserController {
 
     boolean isSuccess;
     if (isNewUser) {
-      // Create new user
-      isSuccess = userService.createUser(token, user);
+      isSuccess = userService.createUser(user);
     } else {
-      isSuccess = userService.updateUser(token, user);
+      isSuccess = userService.updateUser(user);
     }
 
     if (isSuccess) {
@@ -185,7 +113,7 @@ public class UserController {
       return "redirect:/login";
     }
 
-    boolean isDeleted = userService.deleteUser(token, id);
+    boolean isDeleted = userService.deleteUser(id);
 
     if (isDeleted) {
       model.addAttribute("message", "User successfully deleted.");
@@ -193,7 +121,7 @@ public class UserController {
       model.addAttribute("message", "Failed to delete user. Please try again.");
     }
 
-    List<User> users = userService.getUsers(token);
+    List<User> users = userService.getUsers();
     model.addAttribute("users", users);
 
     return "redirect:/admin/users";

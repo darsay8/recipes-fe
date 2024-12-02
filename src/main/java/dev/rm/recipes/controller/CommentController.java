@@ -36,7 +36,7 @@ public class CommentController {
       return "redirect:/login";
     }
 
-    List<Comment> comments = commentService.getCommentsByRecipeId(id, token);
+    List<Comment> comments = commentService.getCommentsByRecipeId(id);
     model.addAttribute("comments", comments);
     return "recipe-detail";
   }
@@ -52,7 +52,7 @@ public class CommentController {
     }
 
     try {
-      Comment comment = commentService.createComment(recipeId, content, token);
+      Comment comment = commentService.createComment(recipeId, content);
       prepareModelForComment(recipeId, token, model);
       model.addAttribute("comment", comment);
 
@@ -66,9 +66,9 @@ public class CommentController {
   }
 
   private void prepareModelForComment(Long recipeId, String token, Model model) {
-    Recipe recipe = recipeService.getRecipeById(recipeId, token);
+    Recipe recipe = recipeService.getRecipeById(recipeId);
     String videoId = RecipeUtils.extractVideoId(recipe.getVideoUrl());
-    List<Comment> comments = commentService.getCommentsByRecipeId(recipeId, token);
+    List<Comment> comments = commentService.getCommentsByRecipeId(recipeId);
 
     model.addAttribute("recipe", recipe);
     model.addAttribute("videoId", videoId);

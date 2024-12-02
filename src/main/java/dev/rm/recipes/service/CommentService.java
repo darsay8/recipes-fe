@@ -23,30 +23,20 @@ public class CommentService {
     this.restTemplate = restTemplate;
   }
 
-  public List<Comment> getCommentsByRecipeId(Long recipeId, String token) {
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", "Bearer " + token);
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
-    HttpEntity<Void> entity = new HttpEntity<>(headers);
+  public List<Comment> getCommentsByRecipeId(Long recipeId) {
 
     ResponseEntity<List<Comment>> response = restTemplate.exchange(
-        backendUrl + "/recipes/" + recipeId + "/comments", HttpMethod.GET, entity,
+        backendUrl + "/recipes/" + recipeId + "/comments", HttpMethod.GET, null,
         (Class<List<Comment>>) (Class<?>) List.class);
 
     return response.getBody();
   }
 
-  public Comment createComment(Long recipeId, String content, String token) {
+  public Comment createComment(Long recipeId, String content) {
     Comment comment = new Comment();
     comment.setContent(content);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("Authorization", "Bearer " + token);
-
-    HttpEntity<Comment> request = new HttpEntity<>(comment, headers);
+    HttpEntity<Comment> request = new HttpEntity<>(comment);
 
     ResponseEntity<Comment> response = restTemplate.exchange(
         backendUrl + "/recipes/" + recipeId + "/comments", HttpMethod.POST, request, Comment.class);

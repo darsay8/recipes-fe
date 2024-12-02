@@ -19,27 +19,19 @@ public class LikeService {
     this.restTemplate = restTemplate;
   }
 
-  public long getLikesCountByRecipeId(Long recipeId, String token) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", "Bearer " + token);
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
-    HttpEntity<Void> entity = new HttpEntity<>(headers);
+  public long getLikesCountByRecipeId(Long recipeId) {
 
     ResponseEntity<Long> response = restTemplate.exchange(
-        backendUrl + "/recipes/" + recipeId + "/likes/total", HttpMethod.GET, entity,
+        backendUrl + "/recipes/" + recipeId + "/likes/total", HttpMethod.GET, null,
         Long.class);
 
     return response.getBody();
   }
 
-  public Like createLike(Long recipeId, String token) {
+  public Like createLike(Long recipeId) {
     Like like = new Like();
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("Authorization", "Bearer " + token);
 
-    HttpEntity<Like> request = new HttpEntity<>(like, headers);
+    HttpEntity<Like> request = new HttpEntity<>(like);
 
     ResponseEntity<Like> response = restTemplate.exchange(
         backendUrl + "/recipes/" + recipeId + "/likes", HttpMethod.POST, request, Like.class);
