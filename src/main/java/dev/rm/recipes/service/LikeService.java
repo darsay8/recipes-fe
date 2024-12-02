@@ -25,7 +25,8 @@ public class LikeService {
         backendUrl + "/recipes/" + recipeId + "/likes/total", HttpMethod.GET, null,
         Long.class);
 
-    return response.getBody();
+    Long likesCount = response.getBody();
+    return (likesCount != null) ? likesCount : 0L;
   }
 
   public Like createLike(Long recipeId) {

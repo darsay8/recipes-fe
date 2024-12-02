@@ -1,6 +1,7 @@
 package dev.rm.recipes.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -24,10 +25,12 @@ public class CommentService {
   }
 
   public List<Comment> getCommentsByRecipeId(Long recipeId) {
-
     ResponseEntity<List<Comment>> response = restTemplate.exchange(
-        backendUrl + "/recipes/" + recipeId + "/comments", HttpMethod.GET, null,
-        (Class<List<Comment>>) (Class<?>) List.class);
+        backendUrl + "/recipes/" + recipeId + "/comments",
+        HttpMethod.GET,
+        null,
+        new ParameterizedTypeReference<List<Comment>>() {
+        });
 
     return response.getBody();
   }
