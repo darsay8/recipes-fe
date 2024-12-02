@@ -28,8 +28,18 @@ public class SecurityConfig {
     http
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/", "/register", "/login", "/recipes", "/recipes/search/**", "/recipes/reset",
+                "/css/**", "/js/**")
+            .permitAll()
+            .anyRequest().authenticated())
+        .formLogin(form -> form
+            .loginPage("/login")
+            .permitAll())
+        .exceptionHandling(exception -> exception
+            .authenticationEntryPoint((request, response, authException) -> {
+              response.sendRedirect("/login");
+            }));
     return http.build();
   }
 
