@@ -4,19 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Users</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/styles.css">
   <script src="/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
-  <div class="container mt-5">
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-end mb-4 align-items-center">
+          <div class="me-2">
+            <a href="/recipes" class="btn btn-secondary"><i class="fa-solid fa-house"></i> Back to Recipes</a>
+          </div>
+
+          <div th:if="${session.token != null}" class="me-2">
+            <a href="/recipes/create" class="btn btn-secondary"><i class="fa-solid fa-plus"></i> Add Recipe</a>
+          </div>
+
+          <div th:if="${session.token != null}">
+            <a href="/logout" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="container mt-4">
+        <h2 class="display-4 mb-4 text-start">Admin Users</h2>
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#userModal">
-            <i class="fas fa-user"></i> Create User
+          <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#userModal">
+            <i class="fa-solid fa-user-plus"></i> Add User
           </button>
         </div>
         <div class="card mt-4 p-3">

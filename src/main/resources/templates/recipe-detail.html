@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title th:text="${recipe.name}">Recipe Name</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/styles.css">
   <script src="/js/bootstrap.bundle.min.js"></script>
@@ -13,30 +13,64 @@
 </head>
 
 <body>
-  <div class="container mt-5 text-center">
-    <h1 class="display-4 mb-4" th:text="${recipe.name}">Recipe Name</h1>
-    <div class="row mb-4">
-      <div class="col-12 col-lg-6">
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-end mb-4 align-items-center">
+          <div class="me-2">
+            <a href="/recipes" class="btn btn-secondary"><i class="fa-solid fa-house"></i> Back to Recipes</a>
+          </div>
+
+          <div th:if="${session.token != null}" class="me-2">
+            <a href="/recipes/create" class="btn btn-secondary"><i class="fa-solid fa-plus"></i> Add Recipe</a>
+          </div>
+
+          <div th:if="${session.role != null and session.role == 'ADMIN'}" class="me-2">
+            <a href="/admin/users" class="btn btn-secondary"><i class="fa-solid fa-user-gear"></i> Admin Users</a>
+          </div>
+
+          <div th:if="${session.token != null}">
+            <a href="/logout" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h1 class="display-4 mb-4 text-start" th:text="${recipe.name}">Recipe Name</h1>
+    <div class="row mt-4">
+      <div class="col-12 col-xl-6">
         <img th:src="@{${recipe.image}}" class="img-fluid rounded" alt="Recipe Image" width="560">
+
+        <div>
+          <h2>Watch the Recipe Video</h2>
+          <iframe width="560" height="315" th:src="@{'https://www.youtube.com/embed/' + ${videoId}}" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+          </iframe>
+        </div>
       </div>
 
-      <div class="col-12 col-lg-6">
+      <div class="col-12 col-xl-6" style="height: fit-content;">
 
-        <h3 class="mt-4">Ingredients:</h3>
-        <ul class="list-group mb-4">
-          <li class="list-group-item" th:each="ingredient : ${recipe.ingredients}"
-            th:text="${ingredient.quantity} + ' of ' + ${ingredient.name}">
-            Ingredient
-          </li>
-        </ul>
+        <div class="mb-5">
+          <h3>Ingredients:</h3>
+          <ul class="list-group mb-4">
+            <li class="list-group-item" th:each="ingredient : ${recipe.ingredients}"
+              th:text="${ingredient.quantity} + ' of ' + ${ingredient.name}">
+              Ingredient
+            </li>
+          </ul>
+        </div>
 
-        <h3 class="mt-4 ">Instructions:</h3>
-        <p class="lead" th:text="${recipe.instructions}">Recipe Instructions</p>
+        <div class="my-5">
+          <h3>Instructions:</h3>
+          <p class="lead" th:text="${recipe.instructions}">Recipe Instructions</p>
+        </div>
 
 
-        <div class="mt-4">
+        <div class="my-5">
           <p><strong>Share this recipe:</strong></p>
-          <div class="d-flex justify-content-center">
+          <div class="">
             <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:8080/recipes/{id}(id=${recipe.recipeId})"
               target="_blank" class="btn btn-primary btn-sm me-2">
               <i class="fab fa-facebook-f"></i> Share on Facebook
@@ -51,11 +85,11 @@
           </div>
         </div>
 
-        <div class="mt-4 d-flex align-items-center justify-content-center">
+        <div class="mt-4 d-flex align-items-center">
           <div class="">
             <form th:action="@{/recipes/{id}/likes(id=${recipe.recipeId})}" method="post">
               <button type="submit" class="btn btn-outline-danger btn me-3">
-                <i class="fas fa-heart"></i> Likes <span th:text="${likes}"></span>
+                <i class="fas fa-heart"></i> Likes <span th:text="${likes != null ? likes : 0}"></span>
               </button>
             </form>
           </div>
@@ -66,35 +100,26 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div>
-      <h2>Watch the Recipe Video</h2>
-      <iframe width="560" height="315" th:src="@{'https://www.youtube.com/embed/' + ${videoId}}" frameborder="0"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-      </iframe>
-    </div>
 
-    <div class="mt-4">
-      <h4>Add a Comment</h4>
-      <form id="commentForm" th:action="@{/recipes/{id}/comments(id=${recipe.recipeId})}" method="post">
-        <textarea name="content" class="form-control" placeholder="Write your comment here..." required></textarea>
-        <button type="submit" class="btn btn-primary my-4">Submit Comment</button>
-      </form>
+      <div class="col-12">
+        <h4>Add a Comment</h4>
+        <form id="commentForm" th:action="@{/recipes/{id}/comments(id=${recipe.recipeId})}" method="post">
+          <textarea name="content" class="form-control" placeholder="Write your comment here..." required></textarea>
+          <div th:if="${errorMessage}" style="color: red;" class="d-flex justify-content-start mt-2">
+            <p> <i class="fa-solid fa-circle-exclamation"></i><span class="ms-2" th:text="${errorMessage}"></span></p>
+          </div>
+          <button type="submit" class="btn btn-primary my-4">Submit Comment</button>
+        </form>
 
-      <div th:if="${errorMessage}" style="color: red;">
-        <p th:text="${errorMessage}"></p>
-      </div>
 
-      <div id="commentsSection" class="mt-2">
-        <div th:each="comment : ${comments}">
-          <p><strong th:text="${comment.username}"></strong>: <span th:text="${comment.content}"></span></p>
+        <div id="commentsSection" class="mt-2">
+          <div th:each="comment : ${comments}">
+            <p><strong th:text="${comment.username}"></strong>: <span th:text="${comment.content}"></span></p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="mt-4 mb-5">
-      <a href="/recipes" class="btn btn-secondary">Back to Recipes</a>
     </div>
   </div>
 </body>
