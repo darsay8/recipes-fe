@@ -15,6 +15,10 @@ public class LikeService {
 
   private final RestTemplate restTemplate;
 
+  public void setBackendUrl(String backendUrl) {
+    this.backendUrl = backendUrl;
+  }
+
   public LikeService(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
   }
@@ -36,6 +40,10 @@ public class LikeService {
 
     ResponseEntity<Like> response = restTemplate.exchange(
         backendUrl + "/recipes/" + recipeId + "/likes", HttpMethod.POST, request, Like.class);
+
+    if (response.getStatusCode() != HttpStatus.CREATED) {
+      throw new RuntimeException("Failed to create like");
+    }
 
     return response.getBody();
   }

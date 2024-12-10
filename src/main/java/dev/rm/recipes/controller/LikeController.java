@@ -28,14 +28,14 @@ public class LikeController {
   }
 
   @GetMapping("/{recipeId}/likes")
-  public String getRecipeWithLikes(@PathVariable Long id, Model model, HttpSession session) {
+  public String getRecipeWithLikes(@PathVariable Long recipeId, Model model, HttpSession session) {
 
     String token = (String) session.getAttribute("token");
     if (token == null) {
       return "redirect:/login";
     }
 
-    long likes = likeService.getLikesCountByRecipeId(id);
+    long likes = likeService.getLikesCountByRecipeId(recipeId);
 
     model.addAttribute("likes", likes);
 

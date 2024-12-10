@@ -21,6 +21,10 @@ public class AuthService {
   @Value("${backend.url}")
   private String backendUrl;
 
+  public void setBackendUrl(String backendUrl) {
+    this.backendUrl = backendUrl;
+  }
+
   private final RestTemplate restTemplate;
 
   public AuthService(RestTemplate restTemplate) {

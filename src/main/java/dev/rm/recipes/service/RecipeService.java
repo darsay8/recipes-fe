@@ -28,6 +28,10 @@ public class RecipeService {
   @Value("${backend.url}")
   private String backendUrl;
 
+  public void setBackendUrl(String backendUrl) {
+    this.backendUrl = backendUrl;
+  }
+
   private final RestTemplate restTemplate;
 
   public RecipeService(RestTemplate restTemplate) {

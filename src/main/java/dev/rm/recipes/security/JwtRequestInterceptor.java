@@ -22,9 +22,11 @@ public class JwtRequestInterceptor implements ClientHttpRequestInterceptor {
       throws IOException {
     String token = (String) session.getAttribute("token");
 
+    // Always add Content-Type
+    request.getHeaders().add("Content-Type", "application/json");
+
     if (token != null && !token.isEmpty()) {
       request.getHeaders().add("Authorization", "Bearer " + token);
-      request.getHeaders().add("Content-Type", "application/json");
     }
 
     return execution.execute(request, body);

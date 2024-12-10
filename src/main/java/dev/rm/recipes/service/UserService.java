@@ -25,6 +25,10 @@ public class UserService {
   @Value("${backend.url}")
   private String backendUrl;
 
+  public void setBackendUrl(String backendUrl) {
+    this.backendUrl = backendUrl;
+  }
+
   private final RestTemplate restTemplate;
 
   public UserService(RestTemplate restTemplate) {
@@ -62,12 +66,32 @@ public class UserService {
     return null;
   }
 
-  public boolean createUser(User user) {
+  // public boolean createUser(User user) {
 
+  // try {
+  // ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+  // backendUrl + "/users",
+  // HttpMethod.POST,
+  // new HttpEntity<>(user),
+  // new ParameterizedTypeReference<Map<String, Object>>() {
+  // });
+
+  // if (response.getStatusCode() == HttpStatus.CREATED) {
+  // return true;
+  // } else {
+  // log.error("Failed to create user. Status: " + response.getStatusCode());
+  // return false;
+  // }
+  // } catch (RestClientException e) {
+  // log.error("Error while creating user", e);
+  // return false;
+  // }
+  // }
+
+  public boolean createUser(User user) {
     try {
       ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-          backendUrl + "/users",
-          HttpMethod.POST,
+          backendUrl + "/users", HttpMethod.POST,
           new HttpEntity<>(user),
           new ParameterizedTypeReference<Map<String, Object>>() {
           });
@@ -84,12 +108,36 @@ public class UserService {
     }
   }
 
-  public boolean updateUser(User user) {
+  // public boolean updateUser(User user) {
 
+  // try {
+  // ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+  // backendUrl + "/users/" + user.getUserId(),
+  // HttpMethod.PUT,
+  // new HttpEntity<>(user),
+  // new ParameterizedTypeReference<Map<String, Object>>() {
+  // });
+
+  // if (response.getStatusCode() == HttpStatus.OK) {
+  // return true;
+  // } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+  // log.warn("User with ID " + user.getUserId() + " not found.");
+  // return false;
+  // } else {
+  // log.error("Failed to update user with ID " + user.getUserId() + ". Status: "
+  // + response.getStatusCode());
+  // return false;
+  // }
+  // } catch (RestClientException e) {
+  // log.error("Error while updating user with ID: " + user.getUserId(), e);
+  // return false;
+  // }
+  // }
+
+  public boolean updateUser(User user) {
     try {
       ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-          backendUrl + "/users/" + user.getUserId(),
-          HttpMethod.PUT,
+          backendUrl + "/users/" + user.getUserId(), HttpMethod.PUT,
           new HttpEntity<>(user),
           new ParameterizedTypeReference<Map<String, Object>>() {
           });
@@ -98,6 +146,9 @@ public class UserService {
         return true;
       } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
         log.warn("User with ID " + user.getUserId() + " not found.");
+        return false;
+      } else if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
+        log.warn("Invalid user data for ID " + user.getUserId());
         return false;
       } else {
         log.error("Failed to update user with ID " + user.getUserId() + ". Status: " + response.getStatusCode());
@@ -109,18 +160,43 @@ public class UserService {
     }
   }
 
+  // public boolean deleteUser(Long userId) {
+  // try {
+  // ResponseEntity<Void> response = restTemplate.exchange(
+  // backendUrl + "/users/" + userId,
+  // HttpMethod.DELETE,
+  // null,
+  // Void.class);
+
+  // if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
+  // return true;
+  // } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+  // log.warn("User with ID " + userId + " not found.");
+  // return false;
+  // } else {
+  // log.error("Failed to delete user with ID " + userId + ". Status: " +
+  // response.getStatusCode());
+  // return false;
+  // }
+  // } catch (RestClientException e) {
+  // log.error("Error while deleting user with ID: " + userId, e);
+  // return false;
+  // }
+  // }
+
   public boolean deleteUser(Long userId) {
     try {
       ResponseEntity<Void> response = restTemplate.exchange(
-          backendUrl + "/users/" + userId,
-          HttpMethod.DELETE,
-          null,
-          Void.class);
+          backendUrl + "/users/" + userId, HttpMethod.DELETE,
+          null, Void.class);
 
       if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
         return true;
       } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
         log.warn("User with ID " + userId + " not found.");
+        return false;
+      } else if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
+        log.warn("Bad request while trying to delete user with ID " + userId);
         return false;
       } else {
         log.error("Failed to delete user with ID " + userId + ". Status: " + response.getStatusCode());

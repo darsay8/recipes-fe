@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import dev.rm.recipes.model.Comment;
@@ -25,6 +26,7 @@ import java.util.Set;
 
 @Slf4j
 @Controller
+@RequestMapping("/")
 public class RecipeController {
 
   private RecipeService recipeService;
@@ -37,7 +39,7 @@ public class RecipeController {
     this.likeService = likeService;
   }
 
-  @GetMapping("/")
+  @GetMapping
   public String getRecipes(Model model, HttpSession session) {
     List<Recipe> recipes = recipeService.fetchAllRecipes();
     populateModelWithRecipesAndCountries(model, recipes);

@@ -18,6 +18,10 @@ public class CommentService {
   @Value("${backend.url}")
   private String backendUrl;
 
+  public void setBackendUrl(String backendUrl) {
+    this.backendUrl = backendUrl;
+  }
+
   private final RestTemplate restTemplate;
 
   public CommentService(RestTemplate restTemplate) {
@@ -32,7 +36,12 @@ public class CommentService {
         new ParameterizedTypeReference<List<Comment>>() {
         });
 
-    return response.getBody();
+    if (response.getStatusCode() == HttpStatus.OK) {
+      return response.getBody();
+    }
+
+    return null;
+
   }
 
   public Comment createComment(Long recipeId, String content) {

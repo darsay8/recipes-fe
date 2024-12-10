@@ -19,9 +19,8 @@ import java.util.List;
 @RequestMapping("/recipes")
 public class CommentController {
 
-  private final CommentService commentService;
-
-  private final RecipeService recipeService;
+  private CommentService commentService;
+  private RecipeService recipeService;
 
   public CommentController(CommentService commentService, RecipeService recipeService) {
     this.commentService = commentService;
@@ -53,19 +52,19 @@ public class CommentController {
 
     try {
       Comment comment = commentService.createComment(recipeId, content);
-      prepareModelForComment(recipeId, token, model);
+      prepareModelForComment(recipeId, model);
       model.addAttribute("comment", comment);
 
       return "recipe-detail";
     } catch (Exception e) {
-      prepareModelForComment(recipeId, token, model);
+      prepareModelForComment(recipeId, model);
       model.addAttribute("errorMessage", "Comment contains inappropriate language.");
       return "recipe-detail";
     }
 
   }
 
-  private void prepareModelForComment(Long recipeId, String token, Model model) {
+  private void prepareModelForComment(Long recipeId, Model model) {
     Recipe recipe = recipeService.getRecipeById(recipeId);
     String videoId = RecipeUtils.extractVideoId(recipe.getVideoUrl());
     List<Comment> comments = commentService.getCommentsByRecipeId(recipeId);

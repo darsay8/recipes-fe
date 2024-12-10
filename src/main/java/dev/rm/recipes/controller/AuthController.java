@@ -25,7 +25,7 @@ public class AuthController {
 
   @GetMapping("/login")
   public String login() {
-    return "login";
+    return "login-view";
   }
 
   @PostMapping("/login")
@@ -46,7 +46,7 @@ public class AuthController {
       return "redirect:/recipes";
     } else {
       model.addAttribute("error", "Invalid credentials");
-      return "login";
+      return "login-view";
     }
   }
 
@@ -58,7 +58,7 @@ public class AuthController {
 
   @GetMapping("/register")
   public String register() {
-    return "register";
+    return "register-view";
   }
 
   @PostMapping("/register")
@@ -66,7 +66,7 @@ public class AuthController {
 
     if (!user.getPassword().equals(user.getConfirmPassword())) {
       model.addAttribute("error", "Passwords do not match.");
-      return "register";
+      return "register-view";
     }
 
     Map<String, Object> authData = authService.register(user);
@@ -85,7 +85,7 @@ public class AuthController {
       return "redirect:/recipes";
     } else {
       model.addAttribute("error", "Registration failed. Please try again.");
-      return "register";
+      return "register-view";
     }
 
   }
